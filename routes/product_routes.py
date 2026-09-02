@@ -27,12 +27,51 @@ def create_product():
         return jsonify({"error": "name, price, and barcode are required"}), 400
 
     new_product = Product(
-        name=data["name"],
-        price=data["price"],
-        barcode=data["barcode"],
-        description=data.get("description"),
-        stock_quantity=data.get("stock_quantity", 0),
+        name=data["name"], # type: ignore
+        price=data["price"], # type: ignore
+        barcode=data["barcode"], # type: ignore
+        description=data.get("description"), # type: ignore
+        stock_quantity=data.get("stock_quantity", 0), # type: ignore
     )
     db.session.add(new_product)
     db.session.commit()
     return jsonify(new_product.to_dict()), 201
+
+
+
+@products_bp.route("/<int:product_id>", methods=["PUT"])
+def update_product(product_id: int):
+    product = db.session.get(Product, product_id)
+    if product is None:
+        return jsonify({"error": "Product not found"}), 404
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    if "name" in data:
+        product.name = data["name"]
+    if "price" in data:
+        product.price = data["price"]
+    if "barcode" in data:
+        product.barcode = data["barcode"]
+    if "description" in data:
+        product.description = data["description"]
+    if "stock_quantity" in data:
+        product.stock_quantity = data["stock_quantity"]
+
+    db.session.commit()
+    return jsonify(product.to_dict())
+
+
+@products_bp.route("/<int:product_id>", methods=["DELETE"])
+def delete_product(product_id: int):
+    product = db.session.get(Product, product_id)
+
+    if product is None:
+        return jsonify({"error": "Product not found"}), 404
+
+    db.session.delete(product)
+    db.session.commit()
+    return jsonify({"message": f"Product {product_id} deleted"}), 200
+
