@@ -20,10 +20,14 @@ def create_app():
     from routes.product_routes import products_bp
     from routes.category_routes import category_bp
     from routes.auth_routes import auth_bp
+    from routes.cart_routes import cart_bp
+    from routes.order_routes import orders_bp
     app.register_blueprint(root_bp)
     app.register_blueprint(products_bp)
     app.register_blueprint(category_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(cart_bp)
+    app.register_blueprint(orders_bp)
 
     return app
 
