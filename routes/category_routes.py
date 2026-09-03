@@ -22,7 +22,7 @@ def get_category(category_id: int):
     return jsonify(category.to_dict())
 
 @category_bp.route("", methods=["POST"])
-@role_required("admint")
+@role_required("admin")
 def create_category():
     data = request.get_json()
     if not data or "name" not in data:
