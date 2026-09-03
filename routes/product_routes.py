@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
+
 from extensions import db
 from models import Product
+from utils.decorators import role_required
 
 products_bp = Blueprint("products", __name__, url_prefix="/api/products")
 
@@ -20,6 +22,7 @@ def get_product(product_id: int):
 
 
 @products_bp.route("", methods=["POST"])
+@role_required("admin")
 def create_product():
     data = request.get_json()
 
@@ -30,6 +33,7 @@ def create_product():
         name=data["name"], # type: ignore
         price=data["price"], # type: ignore
         barcode=data["barcode"], # type: ignore
+        category_id=data["category_id"], # type: ignore
         description=data.get("description"), # type: ignore
         stock_quantity=data.get("stock_quantity", 0), # type: ignore
     )
