@@ -1,6 +1,7 @@
 myvenv/
-*.db
-.env
 __pycache__/
 *.pyc
+.env
 instance/
+*.db
+.git/
