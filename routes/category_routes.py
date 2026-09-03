@@ -35,6 +35,7 @@ def create_category():
     return jsonify(new_category.to_dict()), 201
 
 @category_bp.route("/<int:category_id>", methods=["PUT"])
+@role_required("admin")
 def update_category(category_id: int):
     category = db.session.get(Category, category_id)
     if category is None:
@@ -52,6 +53,7 @@ def update_category(category_id: int):
 
 
 @category_bp.route("/<int:category_id>", methods=["DELETE"])
+@role_required("admin")
 def delete_category(category_id: int):
     category = db.session.get(Category, category_id)
     if category is None:

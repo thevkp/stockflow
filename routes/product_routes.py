@@ -44,6 +44,7 @@ def create_product():
 
 
 @products_bp.route("/<int:product_id>", methods=["PUT"])
+@role_required("admin")
 def update_product(product_id: int):
     product = db.session.get(Product, product_id)
     if product is None:
@@ -69,6 +70,7 @@ def update_product(product_id: int):
 
 
 @products_bp.route("/<int:product_id>", methods=["DELETE"])
+@role_required("admin")
 def delete_product(product_id: int):
     product = db.session.get(Product, product_id)
 
