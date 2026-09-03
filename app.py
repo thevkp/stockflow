@@ -13,13 +13,17 @@ def create_app():
     jwt.init_app(app)
 
     with app.app_context():
-        from models import Category, Product # import here so SQLAlchemy sees the model
+        from models import Category, Product # type: ignore  "import here so SQLAlchemy sees the model"
         db.create_all()
 
     from routes.root import root_bp
     from routes.product_routes import products_bp
+    from routes.category_routes import category_bp
+    from routes.auth_routes import auth_bp
     app.register_blueprint(root_bp)
     app.register_blueprint(products_bp)
+    app.register_blueprint(category_bp)
+    app.register_blueprint(auth_bp)
 
     return app
 
