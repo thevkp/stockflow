@@ -12,8 +12,32 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+    # app.py (add this inside create_app, after db.init_app)
+
+    @app.cli.command("create-admin")
+    def create_admin():
+        """Create an admin user."""
+        import getpass
+        from models.user import User
+
+        username = input("Username: ")
+        password = getpass.getpass("Password: ")
+
+        existing = db.session.execute(
+            db.select(User).where(User.username == username)
+        ).scalar_one_or_none()
+        if existing:
+            print(f"User '{username}' already exists.")
+            return
+
+        user = User(username=username, role="admin")
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        print(f"Admin '{username}' created.")   
+
     with app.app_context():
-        from models import Category, Product # type: ignore  "import here so SQLAlchemy sees the model"
+        from models import User, Category, Product, Cart, CartItem, Order, OrderItem # type: ignore  "import here so SQLAlchemy sees the model"
         db.create_all()
 
     from routes.root import root_bp
